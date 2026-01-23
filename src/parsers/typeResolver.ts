@@ -115,7 +115,29 @@ export function resolveType(
 			);
 		}
 
-		if (!includeExternalTypes && isTypeExternal(type, checker)) {
+		// Check if this is an external type, or if it looks like an external type reference
+		// (e.g., React.ComponentType) that TypeScript couldn't fully resolve.
+		// We detect this by checking if the typeNode is a qualified name reference (like React.X)
+		// where TypeScript couldn't resolve the symbol to any declaration. This happens when external
+		// type definitions aren't loaded. TypeScript may still create a "fake" symbol, but it will
+		// have no declarations.
+		let looksLikeUnresolvedExternalType = false;
+		if (typeName?.namespaces?.length && typeNode && ts.isTypeReferenceNode(typeNode)) {
+			const typeNodeName = typeNode.typeName;
+			if (ts.isQualifiedName(typeNodeName)) {
+				// Check if TypeScript could resolve the symbol to an actual declaration
+				const resolvedSymbol = checker.getSymbolAtLocation(typeNodeName.right);
+				if (!resolvedSymbol || !resolvedSymbol.declarations?.length) {
+					// TypeScript couldn't resolve this qualified type reference to a real declaration
+					looksLikeUnresolvedExternalType = true;
+				}
+			}
+		}
+
+		if (
+			!includeExternalTypes &&
+			(isTypeExternal(type, checker) || looksLikeUnresolvedExternalType)
+		) {
 			// Determine the best name to use for this external type.
 			// When a type fully resolves to an external interface (e.g., `Event` from lib.dom.d.ts),
 			// TypeScript provides no aliasSymbol - the type is just the resolved interface.

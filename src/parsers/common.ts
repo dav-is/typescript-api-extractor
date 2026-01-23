@@ -38,17 +38,26 @@ export function getFullName(
 	// Here we don't want to preserve T as a type symbol, but rather resolve it to its actual type.
 	let typeSymbol: ts.Symbol | undefined;
 	let qualifiedNameNamespaces: string[] = [];
+	let unresolvedAuthoredName: string | undefined;
 	if (typeNode && ts.isTypeReferenceNode(typeNode)) {
 		const typeNodeName = (typeNode as ts.TypeReferenceNode).typeName;
 		let typeSymbolCandidate: ts.Symbol | undefined;
 		if (ts.isIdentifier(typeNodeName)) {
 			typeSymbolCandidate = checker.getSymbolAtLocation(typeNodeName);
+			// If TypeScript can't resolve the symbol, preserve the authored name for consistency
+			if (!typeSymbolCandidate) {
+				unresolvedAuthoredName = typeNodeName.text;
+			}
 		} else if (ts.isQualifiedName(typeNodeName)) {
 			typeSymbolCandidate = checker.getSymbolAtLocation(typeNodeName.right);
 			// Extract namespace parts from the qualified name itself
 			// This handles cases like `ComponentRoot.ChangeEventDetails` where
 			// `ComponentRoot` is used as a namespace qualifier in the type reference
 			qualifiedNameNamespaces = getQualifiedNameNamespaces(typeNodeName);
+			// If TypeScript can't resolve the symbol, preserve the authored name for consistency
+			if (!typeSymbolCandidate) {
+				unresolvedAuthoredName = typeNodeName.right.text;
+			}
 		}
 
 		if (
@@ -60,9 +69,9 @@ export function getFullName(
 		}
 	}
 
-	const name = getTypeName(type, typeSymbol);
-	// Use namespaces from the symbol/type first, but fall back to qualified name namespaces
-	// when the type doesn't have intrinsic namespace information
+	const name = unresolvedAuthoredName ?? getTypeName(type, typeSymbol);
+	// Use namespaces from the symbol/type first, then fall back to qualified name namespaces
+	// from the authored code when the type doesn't have intrinsic namespace information
 	let namespaces = typeSymbol ? getTypeSymbolNamespaces(typeSymbol) : getTypeNamespaces(type);
 	if (namespaces.length === 0 && qualifiedNameNamespaces.length > 0) {
 		namespaces = qualifiedNameNamespaces;

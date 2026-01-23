@@ -1,0 +1,143 @@
+{
+	"name": "test/unresolved-external-types/input",
+	"exports": [
+		{
+			"name": "ComponentWithUnresolvedExternal",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "ComponentWithUnresolvedExternal"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "object",
+									"typeName": {
+										"name": "PropsWithUnresolvedExternal"
+									},
+									"properties": [
+										{
+											"name": "externalProp",
+											"type": {
+												"kind": "external",
+												"typeName": {
+													"name": "SomeType",
+													"namespaces": [
+														"ExternalLib"
+													]
+												}
+											},
+											"documentation": {
+												"description": "A prop using an unresolved external qualified type",
+												"tags": []
+											},
+											"optional": true
+										},
+										{
+											"name": "externalGeneric",
+											"type": {
+												"kind": "external",
+												"typeName": {
+													"name": "Container",
+													"namespaces": [
+														"ExternalLib"
+													]
+												}
+											},
+											"documentation": {
+												"description": "Another unresolved external with generic",
+												"tags": []
+											},
+											"optional": true
+										}
+									]
+								},
+								"name": "props",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"typeName": {
+								"name": "Element"
+							},
+							"intrinsic": "any"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "ComponentWithLocalNamespace",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "ComponentWithLocalNamespace"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "object",
+									"typeName": {
+										"name": "PropsWithLocalNamespace"
+									},
+									"properties": [
+										{
+											"name": "localProp",
+											"type": {
+												"kind": "union",
+												"types": [
+													{
+														"kind": "object",
+														"typeName": {
+															"name": "LocalType",
+															"namespaces": [
+																"LocalNamespace"
+															]
+														},
+														"properties": [
+															{
+																"name": "value",
+																"type": {
+																	"kind": "intrinsic",
+																	"intrinsic": "string"
+																},
+																"optional": false
+															}
+														]
+													},
+													{
+														"kind": "intrinsic",
+														"intrinsic": "undefined"
+													}
+												]
+											},
+											"documentation": {
+												"description": "A prop using a local qualified type - should be resolved, not external",
+												"tags": []
+											},
+											"optional": true
+										}
+									]
+								},
+								"name": "props",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"typeName": {
+								"name": "Element"
+							},
+							"intrinsic": "any"
+						}
+					}
+				]
+			}
+		}
+	]
+}
