@@ -77,8 +77,11 @@ function commentToString(
 	const parts: string[] = [];
 	for (const part of comment) {
 		if (ts.isJSDocLink(part) || ts.isJSDocLinkCode(part) || ts.isJSDocLinkPlain(part)) {
-			const tag =
-				ts.isJSDocLink(part) ? 'link' : ts.isJSDocLinkCode(part) ? 'linkcode' : 'linkplain';
+			const tag = ts.isJSDocLink(part)
+				? 'link'
+				: ts.isJSDocLinkCode(part)
+					? 'linkcode'
+					: 'linkplain';
 			const linkName = part.name ? part.name.getText() : '';
 			const linkText = part.text || '';
 			parts.push(`{@${tag} ${linkName}${linkText}}`);
