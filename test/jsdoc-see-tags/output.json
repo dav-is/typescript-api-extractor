@@ -1,0 +1,243 @@
+{
+	"name": "test/jsdoc-see-tags/input",
+	"exports": [
+		{
+			"name": "withBareUrl",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "withBareUrl"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								"name": "value",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"intrinsic": "void"
+						}
+					}
+				]
+			},
+			"documentation": {
+				"tags": [
+					{
+						"name": "see",
+						"value": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete"
+					}
+				]
+			}
+		},
+		{
+			"name": "withLink",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "withLink"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								"name": "value",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"intrinsic": "void"
+						}
+					}
+				]
+			},
+			"documentation": {
+				"tags": [
+					{
+						"name": "see",
+						"value": "{@link https://external.example/docs}"
+					}
+				]
+			}
+		},
+		{
+			"name": "withLinkLabel",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "withLinkLabel"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								"name": "value",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"intrinsic": "void"
+						}
+					}
+				]
+			},
+			"documentation": {
+				"tags": [
+					{
+						"name": "see",
+						"value": "{@link https://external.example/docs|External Docs}"
+					}
+				]
+			}
+		},
+		{
+			"name": "withLinkTrailing",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "withLinkTrailing"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								"name": "value",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"intrinsic": "void"
+						}
+					}
+				]
+			},
+			"documentation": {
+				"tags": [
+					{
+						"name": "see",
+						"value": "{@link https://external.example/docs} for further information."
+					}
+				]
+			}
+		},
+		{
+			"name": "withPlainRef",
+			"type": {
+				"kind": "function",
+				"typeName": {
+					"name": "withPlainRef"
+				},
+				"callSignatures": [
+					{
+						"parameters": [
+							{
+								"type": {
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								"name": "value",
+								"optional": false
+							}
+						],
+						"returnValueType": {
+							"kind": "intrinsic",
+							"intrinsic": "void"
+						}
+					}
+				]
+			},
+			"documentation": {
+				"tags": [
+					{
+						"name": "see",
+						"value": "SomeComponent"
+					}
+				]
+			}
+		},
+		{
+			"name": "PropsWithSee",
+			"type": {
+				"kind": "object",
+				"typeName": {
+					"name": "PropsWithSee"
+				},
+				"properties": [
+					{
+						"name": "autoComplete",
+						"type": {
+							"kind": "union",
+							"types": [
+								{
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								{
+									"kind": "intrinsic",
+									"intrinsic": "undefined"
+								}
+							]
+						},
+						"documentation": {
+							"description": "Provides a hint for autofill.",
+							"tags": [
+								{
+									"name": "see",
+									"value": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete"
+								}
+							]
+						},
+						"optional": true
+					},
+					{
+						"name": "variant",
+						"type": {
+							"kind": "union",
+							"types": [
+								{
+									"kind": "intrinsic",
+									"intrinsic": "string"
+								},
+								{
+									"kind": "intrinsic",
+									"intrinsic": "undefined"
+								}
+							]
+						},
+						"documentation": {
+							"description": "The variant style.",
+							"tags": [
+								{
+									"name": "see",
+									"value": "{@link https://external.example/docs|Style Guide}"
+								}
+							]
+						},
+						"optional": true
+					}
+				]
+			}
+		}
+	]
+}

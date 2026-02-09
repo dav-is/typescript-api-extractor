@@ -56,6 +56,39 @@ function getVisibilityFromJSDoc(doc: ts.JSDoc): Documentation['visibility'] | un
 	return undefined;
 }
 
+/**
+ * Convert a JSDoc tag comment to a plain string.
+ *
+ * TypeScript represents comments as either a plain string or a NodeArray of
+ * JSDocText / JSDocLink / JSDocLinkCode / JSDocLinkPlain nodes (the latter
+ * when the comment contains inline `{@link …}` tags).  This helper
+ * reconstructs the original text in both cases so downstream consumers see
+ * the full value.
+ */
+function commentToString(
+	comment: string | ts.NodeArray<ts.JSDocComment> | undefined,
+): string | undefined {
+	if (typeof comment === 'string') {
+		return comment;
+	}
+	if (!comment) {
+		return undefined;
+	}
+	const parts: string[] = [];
+	for (const part of comment) {
+		if (ts.isJSDocLink(part) || ts.isJSDocLinkCode(part) || ts.isJSDocLinkPlain(part)) {
+			const tag =
+				ts.isJSDocLink(part) ? 'link' : ts.isJSDocLinkCode(part) ? 'linkcode' : 'linkplain';
+			const linkName = part.name ? part.name.getText() : '';
+			const linkText = part.text || '';
+			parts.push(`{@${tag} ${linkName}${linkText}}`);
+		} else {
+			parts.push(part.text);
+		}
+	}
+	return parts.join('') || undefined;
+}
+
 function parseTag(tag: ts.JSDocTag): DocumentationTag {
 	if (ts.isJSDocTypeTag(tag)) {
 		return {
@@ -64,8 +97,22 @@ function parseTag(tag: ts.JSDocTag): DocumentationTag {
 		};
 	}
 
+	// TypeScript parses `@see` tags specially: for `@see https://example.com`,
+	// the parser treats `https` as a JSDocNameReference (tag.name) and
+	// `://example.com` as the comment.  Reconstruct the full value by
+	// prepending the name text when present.
+	if (ts.isJSDocSeeTag(tag)) {
+		const nameText = tag.name ? tag.name.name.getText() : '';
+		const comment = commentToString(tag.comment) ?? '';
+		const value = nameText + comment;
+		return {
+			name: tag.tagName.text,
+			value: value || undefined,
+		};
+	}
+
 	return {
 		name: tag.tagName.text,
-		value: typeof tag.comment === 'string' ? tag.comment : undefined,
+		value: commentToString(tag.comment),
 	};
 }
